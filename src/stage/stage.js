@@ -3,7 +3,6 @@
 import * as THREE from 'three';
 import { settings } from '../settings.js';
 import { initRetro, renderRetro, resizeRetro } from './retro.js';
-import { initTransition } from './transition.js';
 
 // Scenes read and move the shared camera directly.
 export let camera = null;
@@ -41,7 +40,6 @@ export function initStage(hostEl) {
   raycaster = new THREE.Raycaster();
   window.addEventListener('resize', resize);
   bindPointer();
-  initTransition(host);
   resize();
   requestAnimationFrame(loop);
   ready = true;

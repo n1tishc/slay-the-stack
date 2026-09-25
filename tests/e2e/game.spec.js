@@ -375,3 +375,56 @@ test('players with runs behind them keep Standard when difficulty arrives', asyn
   await page.click('[data-act="new-run"]');
   await expect(page.locator('.cs-mode .seg-btn.on')).toContainText('Standard');
 });
+
+test('the menus work before the 3D side loads, and a fight started early waits for it', async ({ page }) => {
+  const errors = trackErrors(page);
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(/\/src\/stage\/impl\.js/, async (r) => {
+    await held;
+    await r.continue();
+  });
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.click('[data-act="new-run"]');
+  await page.click('[data-act="pick-char"][data-id="claude"]');
+  await expect(page.locator('.route .n.avail').first()).toBeVisible();
+  expect(await page.evaluate(() => [SS.Stage.isReady(), document.querySelector('#top-screen').classList.contains('booting')])).toEqual([
+    false,
+    true,
+  ]);
+
+  // A fight started now waits for the 3D side instead of failing.
+  await page.evaluate(() => {
+    SS.debug.startCombat('normal');
+  });
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => [SS.UI.screen, SS.UI.busy])).toEqual(['map', true]);
+  release();
+  await page.waitForFunction(() => SS.UI.screen === 'combat' && !SS.UI.busy, null, { timeout: 15000 });
+  expect(await page.evaluate(() => [SS.Stage.currentScene().name, SS.Stage.currentScene().pickables.length > 0])).toEqual(['battle', true]);
+  await expect(page.locator('#top-screen')).not.toHaveClass(/booting/);
+  expect(errors).toEqual([]);
+});
+
+test('when the 3D side lands it shows the latest screen, with handlers set before the load', async ({ page }) => {
+  const errors = trackErrors(page);
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(/\/src\/stage\/impl\.js/, async (r) => {
+    await held;
+    await r.continue();
+  });
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.click('[data-act="new-run"]');
+  await page.click('[data-act="pick-char"][data-id="claude"]');
+  await expect(page.locator('.route .n.avail').first()).toBeVisible();
+  release();
+  await page.waitForFunction(() => SS.Stage.isReady(), null, { timeout: 15000 });
+  expect(await page.evaluate(() => [SS.Stage.currentScene().name, typeof SS.Stage.currentScene().click])).toEqual(['map', 'function']);
+  expect(await page.locator('#ov-world > *').count()).toBeGreaterThan(0);
+  expect(errors).toEqual([]);
+});

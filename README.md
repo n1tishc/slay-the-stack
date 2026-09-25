@@ -282,6 +282,7 @@ src/art    runtime pixel art: robots, emoji icons, textures, drawn on canvases
   }
   ```
 
+- **Fast first load.** The UI imports only `src/stage/index.js`, which has no three.js in it. three.js and the scenes (about two thirds of the code) come in a separate chunk that starts downloading at boot, so the menus work straight away and the top screen appears when the chunk lands. Until then the latest scene request is remembered, effects are skipped, and a fight waits for the chunk. If the download fails, the game offers a reload. The run is saved before every fight.
 - **The combat engine** (`src/game/engine/combat.js`) holds all the rules: Context and Overflow, damage math, statuses, Counters, Forks and Switches, the turn flow. It records what happened in an effects list (`c.fx`), and the UI plays that back as animations.
 - **The run** (`src/game/engine/run.js`) is a plain JSON-friendly object: deck, HP, map, plugins, stats. It uses a seeded RNG, so a seed replays the same run.
 - **The UI** rebuilds the bottom screen from state on every `render()`. Each screen module exports `bottom()`, plus `hud()` and `world()` if it has top-screen overlays. Buttons declare `data-act="name"`, and one delegated listener dispatches to the handlers each screen registers with `defineActions()`.
@@ -311,6 +312,8 @@ src/game/                  pure game logic (see Architecture)
 
 src/art/                   pixel-art pipeline: canvas → hard pixels + outline; robots, textures, emoji icons
 src/stage/                 top screen (three.js)
+  index.js                 the UI's entry point; loads the three.js side lazily and queues calls until it lands
+  impl.js                  the lazily loaded side: stage.js and the scenes
   stage.js                 renderer, main loop, tweens, screen shake, hit-stop, overlay anchoring, picking
   kit.js                   building blocks: billboard sprites (with hit-flash shader), platforms, props, particles
   transition.js            battle-intro wipes
@@ -367,7 +370,7 @@ tests/support/bot.js       the bots shared by the simulator and the tests
 ## Testing and quality
 
 - **Unit tests** (`npm test`, 38 tests): combat rules (Context, Counters, encryption, Forks, Switches, difficulty scaling), learning features (scenario grading, retries, the recap), and full bot-played runs for every character that check engine invariants after every action.
-- **Browser tests** (`npm run test:e2e`, 16 tests): real flows in Chromium, including a first fight, saving and continuing, the Practice screen, retries and the recap, Llama Forks and DeepSeek Switches, and the difficulty unlock. Any page error fails the test.
+- **Browser tests** (`npm run test:e2e`, 18 tests): real flows in Chromium, including a first fight, saving and continuing, the Practice screen, retries and the recap, Llama Forks and DeepSeek Switches, the difficulty unlock, and play while the 3D side is still loading. Any page error fails the test.
 - **Simulator invariants:** Guard, HP and Compute never go negative, Context stays within max outside an Overflow, and no card is ever lost or duplicated. A turn with more than 50 plays is treated as an infinite combo and fails.
 - **Lint and format:** ESLint and Prettier. The data tables in `src/game/data` are hand-aligned and excluded from Prettier.
 

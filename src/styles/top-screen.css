@@ -2,6 +2,22 @@
 #top-screen {
   background: #000;
 }
+/* Shown until the 3D side (a separate, lazily loaded chunk) is running. */
+#top-screen.booting::after {
+  content: 'LOADING 3D…';
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  font: 500 12px var(--px);
+  letter-spacing: 1px;
+  color: #6b7a99;
+}
+.stage-reload {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 5;
+}
 #stage {
   position: absolute;
   inset: 0;

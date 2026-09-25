@@ -6,7 +6,7 @@ import { Run } from '../../game/engine/run.js';
 import { ENEMIES } from '../../game/data/enemies/index.js';
 import { groupNames } from '../../lib/html.js';
 import { markGuide, scaled, wait } from '../../settings.js';
-import { battle, battleTransition, revealTransition, showScene } from '../../stage/index.js';
+import { battle, battleTransition, clearTransition, loadStage, revealTransition, showScene } from '../../stage/index.js';
 import { resetBars } from '../components/hp-bar.js';
 import { defineActions } from '../actions.js';
 import { character, gameOver, showRoom } from '../flow.js';
@@ -22,7 +22,18 @@ export async function startCombat(kind) {
   const ids = Run.encounter(run, kind);
   ui.busy = true;
   await battleTransition(kind);
+  // A battle needs the 3D scene (hit targets, anchors). It has normally loaded long before.
+  const loaded = await loadStage().then(
+    () => true,
+    () => false,
+  );
   if (ui.run !== run) return; // the player quit during the transition
+  if (!loaded) {
+    // Stay busy so nothing moves on; the run was saved on the map, before this fight.
+    clearTransition();
+    say('The battle view could not load. Check your connection, then reload: your run is saved.');
+    return;
+  }
   ui.c = new Combat(run, ids, kind).start();
   // Meeting a failure mode unlocks its Field Guide entry, even if the fight goes badly.
   ui.failures = [...new Set(ui.c.enemies.filter((e) => e.def.lesson).map((e) => e.def.id))];

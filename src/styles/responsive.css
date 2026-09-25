@@ -13,6 +13,11 @@ body.reduced-motion .plate.gone {
 }
 
 @media (max-width: 820px) {
+  /* The chapter chip spans the top screen: put the loading and reload notes under it. */
+  #top-screen.booting::after,
+  .stage-reload {
+    top: 46px;
+  }
   :root {
     --card-w: 104px;
     --card-h: 150px;
