@@ -1,0 +1,246 @@
+/* Cards: a type-coloured frame around a cream face. Cost orb top-left, token chip and rarity
+   gem inside the art window so neighbouring cards never cover them. */
+.card {
+  --tc: var(--skill);
+  --tcd: var(--skill-d);
+  --rc: var(--common);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  background: linear-gradient(var(--tc), var(--tcd));
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 11px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.35),
+    0 4px 0 rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  text-align: center;
+}
+.card.attack {
+  --tc: var(--attack);
+  --tcd: var(--attack-d);
+}
+.card.skill {
+  --tc: var(--skill);
+  --tcd: var(--skill-d);
+}
+.card.power {
+  --tc: var(--power);
+  --tcd: var(--power-d);
+}
+.card.status {
+  --tc: var(--status);
+  --tcd: var(--status-d);
+}
+.card.curse {
+  --tc: var(--curse);
+  --tcd: var(--curse-d);
+}
+.card.r-uncommon {
+  --rc: var(--uncommon);
+}
+.card.r-rare {
+  --rc: var(--rare);
+}
+.card.r-basic,
+.card.r-special {
+  --rc: #b7bccb;
+}
+.card.r-practice {
+  --rc: var(--practice);
+}
+
+.card .cname {
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.55);
+  font-size: calc(var(--card-w) * 0.098);
+  font-weight: 700;
+  line-height: 1.05;
+  min-height: 2.35em;
+  padding: 0 4px 3px 1.9em;
+  display: grid;
+  place-items: center;
+}
+.card.upgraded .cname {
+  color: #d4ffb8;
+}
+
+.card .cost {
+  position: absolute;
+  top: -11px;
+  left: -11px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #fff6c0, var(--yellow) 50%, #c08a0c);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.card .cost.up {
+  background: radial-gradient(circle at 35% 30%, #ffd0d0, #ff6b6b 50%, #b02030);
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.card .art {
+  position: relative;
+  flex: 0 0 34%;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 6px 6px 0 0;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.07) 0 4px, transparent 4px 8px),
+    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--tc) 35%, #fff), color-mix(in srgb, var(--tc) 70%, #1b1830));
+  overflow: hidden;
+}
+.art-ico {
+  width: 48%;
+  height: auto;
+  max-height: 86%;
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.35));
+}
+.card .tok {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  padding: 0 5px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  background: #dfe8ff;
+  color: #1e3f9e;
+  border: 2px solid var(--ink);
+}
+.card .tok.over {
+  background: var(--danger);
+  color: #fff;
+  animation: blink 0.5s steps(2) infinite;
+}
+.card .tok.free {
+  background: #d4ffd8;
+  color: #1b7a33;
+}
+.card .gem {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  translate: -50% 50%;
+  rotate: 45deg;
+  background: var(--rc);
+  border: 2px solid var(--ink);
+}
+.card .lock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: end start;
+  padding: 3px;
+  background: repeating-linear-gradient(-45deg, rgba(20, 10, 30, 0.45) 0 5px, transparent 5px 10px);
+}
+/* Llama: a Fork is a temporary copy, and looks like one. */
+.card.forked {
+  outline: 2px dashed var(--fork);
+  outline-offset: 1px;
+}
+.card .fork-tag {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  padding: 0 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  background: var(--fork);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+}
+/* A Practice in hand that Counters a living enemy. */
+.card.counter-ready {
+  outline: 3px solid var(--practice);
+  outline-offset: 1px;
+}
+.card .counter-tag {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  translate: -50% 0;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: var(--practice);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  animation: counter-blink 0.8s steps(2) infinite;
+}
+/* DeepSeek: a card that would be a Switch if played now. Steady, unlike the blinking Counter tag. */
+.card .counter-tag.switch-tag {
+  color: var(--ink);
+  background: var(--switch);
+  animation: none;
+}
+@keyframes counter-blink {
+  50% {
+    background: var(--ink);
+  }
+}
+.lock-ico {
+  width: 18px;
+  height: 18px;
+}
+
+.card .ctype {
+  background: var(--cream2);
+  border-inline: 2px solid var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #6a6078;
+  text-transform: uppercase;
+  padding-top: 4px;
+  line-height: 1.2;
+}
+.card .cdesc {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 2px 6px 8px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  font-size: calc(var(--card-w) * 0.093);
+  line-height: 1.18;
+  font-weight: 500;
+  overflow: hidden;
+}
+.card .cdesc b {
+  font-weight: 700;
+}
+.card .kw {
+  color: #8a4f00;
+}
+.card .hk {
+  position: absolute;
+  bottom: 7px;
+  right: 9px;
+  font-size: 10px;
+  color: #a098b0;
+}

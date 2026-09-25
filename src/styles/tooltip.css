@@ -1,0 +1,33 @@
+/* Tooltips. */
+#tooltip {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  max-width: 290px;
+  padding: 8px 11px;
+  border-radius: 8px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+  font-size: calc(14px * var(--ts));
+  line-height: 1.35;
+  opacity: 0;
+}
+#tooltip.show {
+  opacity: 1;
+}
+#tooltip b {
+  color: #7a2a8a;
+}
+#tooltip .dim {
+  color: #6a6078;
+}
+#tooltip .kw {
+  color: #8a4f00;
+}
+#tooltip .tt-sec + .tt-sec {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 2px dashed var(--cream2);
+}

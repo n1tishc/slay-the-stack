@@ -1,0 +1,497 @@
+/* Battle HUD on the top screen: nameplates, HP bars, player box, floats and banners.
+   Info boxes follow the handheld-RPG convention: cream panels, chunky ink borders,
+   an orange "HP" tag and bars that drain instead of jumping. */
+
+/* ── enemy nameplates ── */
+.plate {
+  width: 138px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: default;
+}
+.plate.boss {
+  width: 210px;
+}
+.plate.elite {
+  width: 156px;
+}
+.plate.targetable {
+  cursor: crosshair;
+}
+.plate.targetable .plate-box {
+  box-shadow:
+    0 0 0 3px var(--yellow),
+    0 3px 0 rgba(0, 0, 0, 0.35);
+  animation: tpulse 0.6s steps(2) infinite;
+}
+@keyframes tpulse {
+  50% {
+    box-shadow:
+      0 0 0 3px #fff,
+      0 3px 0 rgba(0, 0, 0, 0.35);
+  }
+}
+/* Blinks out with the fainting sprite. (A transition wouldn't run: the plate is rebuilt, not changed.) */
+.plate.gone {
+  animation: plate-out 0.5s 0.26s steps(1) forwards;
+}
+#ov-world > .plate.gone {
+  pointer-events: none; /* no tooltip or click on a defeated enemy */
+}
+@keyframes plate-out {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  20%,
+  60% {
+    opacity: 1;
+  }
+  80%,
+  to {
+    opacity: 0;
+  }
+}
+.plate-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+}
+.plate-box {
+  width: 100%;
+  padding: 4px 7px 5px;
+  border-radius: 6px 6px 6px 14px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow:
+    inset 0 -3px 0 var(--cream2),
+    0 3px 0 rgba(0, 0, 0, 0.35);
+}
+.plate.elite .plate-box {
+  background: #ffe9d0;
+  box-shadow:
+    inset 0 -3px 0 #f3cfa8,
+    0 3px 0 rgba(0, 0, 0, 0.35);
+}
+.plate.boss .plate-box {
+  background: #ffd9dc;
+  box-shadow:
+    inset 0 -3px 0 #f0b3b9,
+    0 3px 0 rgba(0, 0, 0, 0.35);
+}
+.pname {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.plate.boss .pname {
+  font-size: 15px;
+}
+.pname i {
+  font-style: normal;
+  font-size: 10px;
+  color: #fff;
+  background: #c42b3a;
+  border-radius: 3px;
+  padding: 0 3px;
+  margin-right: 4px;
+  vertical-align: 2px;
+}
+
+.intent,
+.ebadge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 1px 8px 1px 5px;
+  border-radius: 12px;
+  background: rgba(10, 8, 20, 0.88);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: help;
+  white-space: nowrap;
+}
+.intent.attack {
+  border-color: #ff7b7b;
+  color: #ffd0d0;
+}
+.intent .ctx {
+  color: #b9ccff;
+  display: inline-flex;
+  align-items: center;
+}
+.in-ico {
+  width: 16px;
+  height: 16px;
+}
+.ebadge {
+  font-size: 12px;
+  border-color: rgba(160, 200, 255, 0.5);
+  color: #cfe0ff;
+  overflow: hidden;
+}
+.ebadge.warn {
+  border-color: #ffb347;
+  color: #ffe0b0;
+  animation: blink 0.8s steps(2) infinite;
+}
+.ebadge .bctx {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--ctx);
+}
+.ebadge.warn .bctx {
+  background: var(--deep);
+}
+
+/* ── HP bars (shared) ── */
+.hp-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+.hp-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  background: #f2a33a;
+  color: var(--ink);
+  padding: 0 3px;
+  border-radius: 2px;
+  line-height: 12px;
+}
+.bar {
+  position: relative;
+  flex: 1;
+  height: 9px;
+  background: #3a3348;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bar .fill,
+.bar .lag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.bar .lag {
+  background: #fff3c4;
+  transition: width 0.45s 0.35s ease-in;
+}
+.bar .fill {
+  transition:
+    width 0.55s steps(14),
+    background-color 0.2s;
+}
+.bar .fill.hi {
+  background: #3fcf6a;
+  box-shadow:
+    inset 0 -2px 0 #219a45,
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+.bar .fill.mid {
+  background: #f5c73a;
+  box-shadow:
+    inset 0 -2px 0 #b98f12,
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+.bar .fill.lo {
+  background: #f0493d;
+  box-shadow:
+    inset 0 -2px 0 #a8241b,
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+.hp-nums {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.block-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 5px 0 2px;
+  background: #d6f0ff;
+  color: #0c4a78;
+  border: 2px solid #0c4a78;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+}
+.bb-ico {
+  width: 14px;
+  height: 14px;
+}
+.statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+}
+.statuses:empty {
+  display: none;
+}
+.st {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 4px 0 1px;
+  border-radius: 3px;
+  background: #e9e1f7;
+  color: var(--ink);
+  border: 1px solid #b8a8d8;
+  cursor: help;
+}
+.st.debuff {
+  background: #ffe0e3;
+  border-color: #e7a0a8;
+}
+.st-ico {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── player box (bottom-right of the top screen) ── */
+.player-box {
+  position: absolute;
+  right: 14px;
+  bottom: 84px;
+  width: 256px;
+  padding: 6px 10px 7px 12px;
+  border-radius: 16px 6px 6px 6px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.4),
+    inset 0 -3px 0 var(--cream2),
+    inset 5px 0 0 var(--accent);
+}
+.player-box.deep {
+  box-shadow:
+    0 0 0 3px var(--deep),
+    0 3px 0 rgba(0, 0, 0, 0.4),
+    inset 0 -3px 0 var(--cream2),
+    inset 5px 0 0 var(--deep);
+}
+.pb-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.pb-name {
+  font-size: 18px;
+  font-weight: 700;
+}
+.pb-lv {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6a6078;
+}
+.player-box .statuses {
+  justify-content: flex-start;
+  margin-top: 2px;
+}
+/* Context as a thin "experience bar" under HP. */
+.ctx-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1px;
+}
+.ctx-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: #3d63c8;
+  letter-spacing: 0.05em;
+}
+.ctx-mini {
+  flex: 1;
+  height: 5px;
+  background: #d9d4e8;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ctx-mini div {
+  height: 100%;
+  background: var(--ctx);
+  transition: width 0.3s steps(8);
+}
+.player-box.deep .ctx-mini div {
+  background: var(--deep);
+}
+.incoming {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #5a3040;
+  background: #ffeef0;
+  border-radius: 4px;
+  padding: 1px 4px;
+  cursor: help;
+}
+.incoming b {
+  color: #c42b3a;
+}
+.incoming.safe {
+  color: #2f6a44;
+  background: #e6f7ea;
+  cursor: default;
+}
+.incoming.lethal {
+  background: #c42b3a;
+  color: #fff;
+  animation: tpulse2 0.5s steps(2) infinite;
+}
+.incoming.lethal b {
+  color: #fff;
+}
+@keyframes tpulse2 {
+  50% {
+    background: #7a1020;
+  }
+}
+
+/* ── floats, banners, flash ── */
+.float {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow:
+    2px 0 0 #000,
+    -2px 0 0 #000,
+    0 2px 0 #000,
+    0 -2px 0 #000,
+    2px 2px 0 #000,
+    3px 3px 0 #000;
+  animation: floatup 1.05s steps(14) forwards;
+}
+.float.dmg {
+  color: #fff;
+}
+.float.big {
+  font-size: 34px;
+  color: #ffe066;
+}
+.float.dmg-p {
+  color: #ff7070;
+  font-size: 28px;
+}
+.float.blocked,
+.float.block {
+  color: #8fdcff;
+  font-size: 16px;
+}
+.float.heal {
+  color: var(--good);
+}
+.float.poison {
+  color: #b6f06a;
+}
+.float.status {
+  color: var(--accent);
+  font-size: 14px;
+}
+.float.ctx {
+  color: #a9c2ff;
+  font-size: 16px;
+}
+.float.credits {
+  color: var(--yellow);
+  font-size: 18px;
+}
+.float.bad {
+  color: #ff9aa6;
+  font-size: 16px;
+}
+@keyframes floatup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20%) scale(1.5);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -190%);
+  }
+}
+.banner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 34%;
+  text-align: center;
+  animation: banner 1.6s steps(20) forwards;
+}
+.banner .bt {
+  display: inline-block;
+  padding: 6px 40px;
+  font-size: clamp(26px, 4.5vw, 46px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 3px 3px 0 #000;
+  background: linear-gradient(90deg, transparent, rgba(40, 90, 200, 0.92) 12%, rgba(40, 90, 200, 0.92) 88%, transparent);
+  border-top: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+}
+.banner.bad .bt {
+  background: linear-gradient(90deg, transparent, rgba(200, 30, 50, 0.92) 12%, rgba(200, 30, 50, 0.92) 88%, transparent);
+}
+.banner .bs {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+@keyframes banner {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  10% {
+    opacity: 1;
+    transform: none;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.screen-flash {
+  position: absolute;
+  inset: 0;
+  animation: fadeout 0.45s forwards;
+}

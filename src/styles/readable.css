@@ -1,0 +1,58 @@
+/* Readable text. The pixel face stays on titles, buttons, numbers and short labels; anything a
+   player has to read (messages, tooltips, rules, lessons, scenario text) uses a face designed
+   for legibility, at 14px or more. Code in that text is set in monospace. */
+#msgbox .msg-text,
+#tooltip,
+.card .cdesc,
+.choice .cd,
+.scenario .choice .cl,
+.slack p,
+.verdict p,
+.vd-picked,
+.pm-txt > span,
+.cs-blurb,
+.cs-plugin,
+.howto li,
+.gloss div,
+.map-table td,
+.fg-entry dl,
+.fg-fact,
+.fg-head small,
+.modal-box > p,
+.howto > p {
+  font-family: var(--read);
+  -webkit-font-smoothing: antialiased;
+}
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  padding: 0 0.3em;
+  border-radius: 4px;
+  background: rgba(31, 24, 48, 0.09);
+  overflow-wrap: anywhere;
+}
+.verdict code,
+.map-table code {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Short sentences in the HUD and menus: readable face, never below 13px. */
+.ctxbar-head .state,
+.incoming,
+.ebadge,
+.tile-txt small,
+.map-legend .dim,
+.bc-sub,
+.pm-link,
+.pm-have,
+.fg-src {
+  font-family: var(--read);
+  -webkit-font-smoothing: antialiased;
+  font-size: 13px;
+}
+
+/* Settings › Text size: Large scales the reading text (messages, tooltips, scenarios, rewards,
+   lessons) by --ts. Card rules, the HUD and the map keep their size: they have to fit fixed boxes. */
+body.text-large {
+  --ts: 1.2;
+}

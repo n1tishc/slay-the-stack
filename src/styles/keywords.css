@@ -1,0 +1,10 @@
+/* Highlighted rules keywords (hover for a definition). */
+.kw {
+  color: #9a5b00;
+  border-bottom: 2px dotted currentColor;
+  cursor: help;
+}
+.strip .kw,
+.intent .kw {
+  color: var(--yellow);
+}

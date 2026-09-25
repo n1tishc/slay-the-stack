@@ -1,0 +1,63 @@
+/* Chunky DS-style buttons. */
+.ds-btn {
+  --b: var(--gray);
+  --bd: var(--gray-d);
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: #fff;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--b) 80%, #fff) 0 45%, var(--b) 45%);
+  border: 3px solid var(--ink);
+  box-shadow:
+    inset 0 -4px 0 var(--bd),
+    0 3px 0 var(--ink);
+  transition: transform 0.05s;
+}
+.ds-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.ds-btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: inset 0 -2px 0 var(--bd);
+}
+.ds-btn:disabled {
+  filter: grayscale(0.8) brightness(0.7);
+  cursor: not-allowed;
+}
+.ds-btn.big {
+  padding: 13px 26px;
+  font-size: 20px;
+}
+.ds-btn.red {
+  --b: var(--red);
+  --bd: var(--red-d);
+}
+.ds-btn.blue {
+  --b: var(--blue);
+  --bd: var(--blue-d);
+}
+.ds-btn.green {
+  --b: var(--green);
+  --bd: var(--green-d);
+}
+.ds-btn.yellow {
+  --b: var(--yellow);
+  --bd: var(--yellow-d);
+  color: var(--ink);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+.ds-btn.gray {
+  --b: var(--gray);
+  --bd: var(--gray-d);
+}
+
+/* Keyboard focus is always visible. */
+button:focus-visible,
+[data-act]:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}

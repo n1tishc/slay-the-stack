@@ -1,0 +1,542 @@
+/* Rooms: rewards, rest, shop, events, stash, game over. */
+.room-bottom {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+  gap: 14px;
+}
+/* With a postmortem, everything else tightens up so CONTINUE stays on screen. */
+.room-bottom.with-pm {
+  gap: 8px;
+  padding-block: 8px 10px;
+}
+.room-bottom.with-pm .room-title {
+  padding-block: 2px;
+  font-size: 18px;
+}
+.room-bottom.with-pm .choice {
+  min-height: 54px;
+  padding-block: 6px;
+}
+.room-bottom.shop {
+  justify-content: flex-start;
+}
+.room-title {
+  align-self: center;
+  padding: 4px 26px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0 #000;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.45) 15%, rgba(0, 0, 0, 0.45) 85%, transparent);
+  border-top: 2px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+}
+.shop .room-title {
+  align-self: auto;
+}
+.choices {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+.choices.two {
+  grid-template-columns: 1fr 1fr;
+}
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 12px 14px;
+  min-height: 72px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 -4px 0 var(--cream2),
+    0 3px 0 var(--ink);
+}
+.choice:hover:not(:disabled) {
+  background: #fff;
+  box-shadow:
+    inset 0 -4px 0 var(--cream2),
+    0 3px 0 var(--ink),
+    0 0 0 3px var(--yellow);
+}
+.choice:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: inset 0 -2px 0 var(--cream2);
+}
+.choice:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.choice.taken {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.choice .ci {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--accent) 22%, #fff);
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+}
+.choice .ci img {
+  width: 32px;
+  height: 32px;
+}
+.ci-txt {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--red);
+}
+.choice .cl {
+  font-weight: 700;
+  font-size: calc(17px * var(--ts));
+}
+.choice .cd {
+  font-size: calc(13.5px * var(--ts));
+  color: #4d4460;
+}
+.choice .kw {
+  color: #8a4f00;
+}
+.room-actions {
+  display: flex;
+  justify-content: center;
+}
+.room-actions .ds-btn {
+  min-width: 180px;
+}
+.shop-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 14px;
+  justify-content: center;
+  padding-top: 10px;
+}
+.shop-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.shop-card.sold {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.price {
+  margin-top: 4px;
+  font-weight: 700;
+  color: var(--yellow);
+  font-size: 15px;
+  text-shadow: 1px 1px 0 #000;
+}
+.price.cant {
+  color: var(--danger);
+}
+.price .was {
+  text-decoration: line-through;
+  color: var(--dim);
+  margin-right: 4px;
+  font-weight: 400;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 8px;
+}
+.result-title {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 3px 3px 0 #000;
+}
+.result-title.win {
+  color: var(--good);
+}
+.result-title.lose {
+  color: var(--danger);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+.stat-box {
+  text-align: center;
+  padding: 8px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+}
+.stat-box b {
+  display: block;
+  font-size: 26px;
+}
+.stat-box span {
+  font-size: calc(12px * var(--ts));
+  font-weight: 700;
+  color: #6a6078;
+}
+.room-bottom.over .dim {
+  text-align: center;
+}
+
+/* Postmortem on the reward screen: the real-world fix for each failure mode in the fight. */
+.postmortem {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: 8px 12px;
+  background: var(--navy);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.pm-h {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--practice);
+}
+.pm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.pm-row + .pm-row {
+  border-top: 2px solid var(--navy2);
+}
+.pm-ico {
+  width: 28px;
+  flex: none;
+}
+.pm-txt {
+  flex: 1;
+  font-size: calc(14px * var(--ts));
+  line-height: 1.35;
+}
+.pm-txt b {
+  margin-right: 6px;
+}
+.pm-txt span:last-child {
+  display: block;
+  color: #d6dbf2;
+}
+.pm-new {
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--yellow);
+  border-radius: 3px;
+}
+.pm-link {
+  margin-left: 8px;
+  padding: 0;
+  font-size: 12px;
+  color: var(--practice);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+}
+.pm-side {
+  flex: none;
+  width: 190px;
+  display: flex;
+  justify-content: flex-end;
+}
+.room-bottom .choice.pm-add {
+  min-height: 0;
+  padding: 5px 10px;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: calc(14px * var(--ts));
+  font-weight: 700;
+}
+.pm-add small {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #1d7a6c;
+}
+.pm-add img,
+.pm-have img {
+  width: 16px;
+  vertical-align: -3px;
+}
+.pm-have {
+  font-size: 13px;
+  color: var(--good);
+}
+@media (max-width: 600px) {
+  .pm-row {
+    flex-wrap: wrap;
+  }
+  .pm-side {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 38px;
+  }
+}
+
+/* "What would you do?" scenarios: a Slack message, lettered answers, then the verdict. */
+.room-bottom.scenario {
+  gap: 10px;
+}
+.slack,
+.verdict,
+.sl-q,
+.choices.one {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+.slack {
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.sl-av {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+.sl-from small {
+  margin-left: 8px;
+  color: #6a6078;
+  font-size: 12px;
+}
+.slack p {
+  margin: 2px 0 0;
+  font-size: calc(15px * var(--ts));
+  line-height: 1.4;
+}
+.sl-q {
+  font-weight: 700;
+  color: var(--yellow);
+  text-shadow: 2px 2px 0 #000;
+}
+.slack .sl-note {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 2px dashed var(--cream2);
+  font-size: calc(14px * var(--ts));
+  color: #5d5370;
+}
+.choices.one {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.room-bottom.scenario {
+  padding-block: 8px;
+}
+.scenario .room-title {
+  padding-block: 2px;
+  font-size: 18px;
+}
+.scenario .choice {
+  min-height: 0;
+  padding: 5px 12px;
+  gap: 10px;
+}
+/* Large text: a little less air, so three answers still fit a laptop screen. */
+.text-large .room-bottom.scenario {
+  gap: 7px;
+}
+.text-large .scenario .choice {
+  padding-block: 3px;
+}
+.text-large .choices.one {
+  gap: 6px;
+}
+.text-large .slack p,
+.text-large .verdict p {
+  line-height: 1.3;
+}
+.text-large .slack .sl-note {
+  margin-top: 3px;
+  padding-top: 3px;
+}
+.scenario .choice .ci {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+}
+.scenario .ci-txt {
+  font-size: 17px;
+}
+.scenario .choice .cd:empty {
+  display: none;
+}
+.verdict {
+  padding: 10px 14px;
+  background: var(--navy);
+  border: 3px solid var(--ink);
+  border-left: 8px solid var(--vc);
+  border-radius: 10px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.verdict.best {
+  --vc: var(--good);
+}
+.verdict.ok {
+  --vc: var(--yellow);
+}
+.verdict.bad {
+  --vc: var(--danger);
+}
+.vd-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.vd-head b {
+  color: var(--vc);
+  letter-spacing: 0.1em;
+}
+.vd-picked {
+  color: var(--dim);
+  font-size: calc(13px * var(--ts));
+}
+.verdict p {
+  margin: 6px 0 0;
+  font-size: calc(14.5px * var(--ts));
+  line-height: 1.45;
+  color: #e3e6f7;
+}
+.vd-best b {
+  color: var(--good);
+}
+.vd-foot {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.vd-foot .ds-btn {
+  margin-left: auto;
+}
+.vd-reward {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Scenario retry tag and the end-of-run recap (failure modes met, calls to revisit). */
+.room-title .pm-new {
+  margin-left: 8px;
+  vertical-align: middle;
+  font-family: var(--read);
+  font-size: 11px;
+}
+.recap .pm-h + .rc-call,
+.recap .rc-chips + .pm-h {
+  margin-top: 6px;
+}
+.rc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.rc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 6px;
+  font-family: var(--read);
+  font-size: calc(14px * var(--ts));
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.rc-chip:hover {
+  background: #fff;
+}
+.rc-call {
+  padding: 6px 0;
+  font-family: var(--read);
+  font-size: calc(14px * var(--ts));
+  line-height: 1.35;
+}
+.rc-call + .rc-call {
+  border-top: 2px solid var(--navy2);
+}
+.rc-call p {
+  margin: 2px 0 0;
+  color: #d6dbf2;
+}
+.rc-grade {
+  margin-left: 8px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  border-radius: 3px;
+}
+.rc-grade.ok {
+  background: var(--yellow);
+}
+.rc-grade.bad {
+  background: var(--danger);
+  color: #fff;
+}
+.rc-note {
+  margin: 4px 0 0;
+  font-family: var(--read);
+  font-size: calc(13px * var(--ts));
+  color: #b9c0dd;
+}
+/* A long recap scrolls, but the way back stays on screen (on phones the whole page scrolls). */
+.room-bottom.over {
+  gap: 8px;
+  padding-block: 8px 10px;
+}
+.room-bottom.over .room-actions {
+  position: sticky;
+  bottom: -10px; /* over the panel's bottom padding */
+  margin-inline: -16px;
+  padding: 18px 0 10px;
+  background: linear-gradient(to bottom, transparent, var(--navy) 16px);
+}
+
+/* Game over: the run's difficulty, and the Hard unlock. */
+.over-mode {
+  font-family: var(--read);
+  font-size: calc(14px * var(--ts));
+  color: var(--dim);
+  text-align: center;
+}
+.over-mode b {
+  color: var(--yellow);
+}

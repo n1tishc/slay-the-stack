@@ -1,0 +1,52 @@
+/* Design tokens: palette, type and layout sizes. */
+:root {
+  --ts: 1; /* reading-text scale: Settings › Text size */
+  --page: #121019;
+  --shell: #2c2f3d;
+  --shell-hi: #3c4052;
+  --bezel: #08080c;
+  --navy: #1b2142;
+  --navy2: #222a52;
+  --ink: #1f1830;
+  --cream: #fbf6e8;
+  --cream2: #efe6cf;
+  --text: #f3f0ff;
+  --dim: #9ea6c8;
+  --red: #e84b4b;
+  --red-d: #9c2a2e;
+  --blue: #3f7fe0;
+  --blue-d: #22509e;
+  --green: #39a95c;
+  --green-d: #22703c;
+  --yellow: #f2c230;
+  --yellow-d: #a8820c;
+  --gray: #7d84a0;
+  --gray-d: #4c5270;
+  --attack: #e8584f;
+  --attack-d: #a3302b;
+  --skill: #3f8ae0;
+  --skill-d: #24569e;
+  --power: #9a5fd6;
+  --power-d: #5f3596;
+  --status: #7c8597;
+  --status-d: #4d5466;
+  --curse: #6b3f86;
+  --curse-d: #3f2152;
+  --common: #8a8f9e;
+  --uncommon: #3f8ae0;
+  --rare: #e0a82a;
+  --practice: #2fb7a3;
+  --fork: #e3b341; /* Llama Forks */
+  --switch: #3fa2f7; /* DeepSeek Switches */
+  --ctx: #6f9bff;
+  --deep: #ff9e45;
+  --danger: #ff4d5e;
+  --good: #59d27d;
+  --accent: #ffcb3d;
+  --px: 'Pixelify Sans', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --read: 'Atkinson Hyperlegible Next', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --bottom-h: clamp(330px, 46vh, 440px);
+  --card-w: 150px;
+  --card-h: 212px;
+}

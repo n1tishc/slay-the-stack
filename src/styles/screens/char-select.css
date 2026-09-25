@@ -1,0 +1,164 @@
+/* Character select. */
+.cs-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px 10px;
+  gap: 8px;
+  min-height: 0;
+}
+.cs-tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+  font-size: 16px;
+}
+.tab img {
+  width: 22px;
+  height: 28px;
+}
+.tab.on {
+  background: var(--c);
+  border-color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+.cs-body {
+  flex: 1;
+  display: flex;
+  gap: 14px;
+  min-height: 0;
+}
+.panel {
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 3px var(--cream),
+    inset 0 0 0 5px var(--c, var(--accent)),
+    0 3px 0 rgba(0, 0, 0, 0.4);
+}
+.cs-info {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+}
+.cs-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.cs-co {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #6a6078;
+}
+.cs-name {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+.cs-title {
+  color: var(--c);
+  font-weight: 700;
+  filter: brightness(0.8);
+}
+.cs-stats {
+  display: flex;
+  gap: 8px;
+}
+.cs-stats div {
+  text-align: center;
+  background: var(--cream2);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.cs-stats b {
+  display: block;
+  font-size: 22px;
+}
+.cs-blurb {
+  font-size: calc(15px * var(--ts));
+  line-height: 1.35;
+}
+.cs-plugin {
+  font-size: calc(14px * var(--ts));
+  background: var(--cream2);
+  border-radius: 6px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 2px solid var(--ink);
+  background: #fff;
+}
+/* Difficulty, at the foot of the info panel. */
+.cs-mode {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 2px dashed rgba(31, 24, 48, 0.2);
+  font-size: calc(14px * var(--ts));
+}
+.cs-mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cs-mode-row b {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.cs-mode .seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-family: var(--read);
+  font-size: 14px;
+}
+.cs-mode .seg-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.cs-mode p {
+  margin: 5px 0 0;
+  font-family: var(--read);
+  line-height: 1.3;
+}
+.cs-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}

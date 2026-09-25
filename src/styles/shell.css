@@ -1,0 +1,65 @@
+/* The handheld console shell: two screens joined by a hinge. */
+#ds {
+  height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px 14px 12px;
+  display: grid;
+  grid-template-rows: minmax(220px, 1fr) 16px var(--bottom-h);
+  background: linear-gradient(180deg, var(--shell-hi), var(--shell) 40%, #252836);
+  border-left: 2px solid #464b60;
+  border-right: 2px solid #1b1d27;
+  box-shadow:
+    0 0 0 1px #000,
+    0 20px 60px #000;
+}
+.screen-frame {
+  position: relative;
+  border: 6px solid var(--bezel);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 1px #2d2d3a,
+    0 1px 0 #50556c;
+  overflow: hidden;
+  min-height: 0;
+}
+#hinge {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22%;
+}
+#hinge::before {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 5px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(#1a1c26, #3a3e50);
+}
+#hinge i {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111;
+  box-shadow: inset 0 1px 1px #555;
+}
+
+#bottom-screen {
+  background: repeating-linear-gradient(45deg, var(--navy) 0 14px, var(--navy2) 14px 28px);
+}
+#app {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+#app.scr-combat,
+#app.scr-map {
+  overflow: hidden;
+}

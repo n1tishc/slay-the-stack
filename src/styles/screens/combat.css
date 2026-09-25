@@ -1,0 +1,294 @@
+/* Combat bottom screen: context meter on top, then Compute + piles | fanned hand | End Turn. */
+.combat-bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── Context meter ── */
+.ctxbar-wrap {
+  padding: 6px 12px 0;
+  flex-shrink: 0;
+}
+.ctxbar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.ctxbar-head .title {
+  color: #a9c2ff;
+  letter-spacing: 0.06em;
+}
+.ctxbar-head .state {
+  color: var(--dim);
+}
+.ctxbar-head .state.deep {
+  color: var(--deep);
+}
+.ctxbar-head .state.over {
+  color: var(--danger);
+  animation: blink 0.4s steps(2) infinite;
+}
+.ctxbar {
+  position: relative;
+  height: 18px;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: #0b0e1e;
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 0 2px 0 rgba(0, 0, 0, 0.5);
+  cursor: help;
+}
+.ctxbar .seg {
+  flex: 1;
+  background: #232a4a;
+  border-radius: 1px;
+}
+.ctxbar .seg.on {
+  background: var(--ctx);
+  box-shadow:
+    inset 0 -3px 0 #3d63c8,
+    inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+.ctxbar .seg.on.deep {
+  background: var(--deep);
+  box-shadow:
+    inset 0 -3px 0 #c06010,
+    inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+.ctxbar .seg.preview {
+  background: repeating-linear-gradient(90deg, var(--ctx) 0 2px, transparent 2px 4px);
+}
+.ctxbar .seg.preview.deep {
+  background: repeating-linear-gradient(90deg, var(--deep) 0 2px, transparent 2px 4px);
+}
+.ctxbar.overflow-preview {
+  border-color: var(--danger);
+}
+.ctxbar.overflow-preview .seg.on,
+.ctxbar.overflow-preview .seg.preview {
+  background: var(--danger);
+  box-shadow: none;
+}
+.ctxbar .thresh {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 3px;
+  background: var(--deep);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.ctxbar .thresh::after {
+  content: 'DEEP';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  translate: -50% 0;
+  font-size: 8px;
+  color: var(--deep);
+  letter-spacing: 0.1em;
+}
+
+/* ── Docks ── */
+.cb-row {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr) 118px;
+  gap: 4px;
+  padding: 0 8px 8px;
+  min-height: 0;
+}
+.left-dock,
+.right-dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-bottom: 6px;
+}
+.energy {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 17px;
+  background: radial-gradient(circle at 35% 30%, #fff6c0, var(--yellow) 45%, #c08a0c);
+  border: 3px solid var(--ink);
+  box-shadow:
+    inset 0 -6px 0 rgba(0, 0, 0, 0.2),
+    0 3px 0 var(--ink),
+    0 0 0 4px rgba(242, 194, 48, 0.25);
+  color: var(--ink);
+  cursor: help;
+}
+.energy::before {
+  content: 'COMPUTE';
+  position: absolute;
+  top: 9px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+.energy b {
+  font-size: 38px;
+  line-height: 1;
+}
+.energy small {
+  font-size: 17px;
+  font-weight: 700;
+}
+.energy.empty {
+  filter: grayscale(1) brightness(0.6);
+  box-shadow:
+    inset 0 -6px 0 rgba(0, 0, 0, 0.2),
+    0 3px 0 var(--ink);
+}
+.energy.pop {
+  animation: pop 0.25s ease-out;
+}
+@keyframes pop {
+  40% {
+    scale: 1.15;
+  }
+}
+.piles {
+  display: flex;
+  gap: 4px;
+}
+.pile {
+  width: 34px;
+  padding: 3px 0 2px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  background: var(--cream);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+  line-height: 1.1;
+}
+.pile b {
+  display: block;
+  font-size: 15px;
+}
+.pile:hover {
+  background: #fff;
+}
+.end-turn {
+  width: 104px;
+  padding: 16px 6px;
+  font-size: 19px;
+  line-height: 1.1;
+}
+/* The obvious next step (End Turn with nothing left to play, Continue with every reward taken). */
+.ds-btn.nudge {
+  animation: nudge 0.9s steps(2) infinite;
+}
+body.reduced-motion .ds-btn.nudge {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@keyframes nudge {
+  50% {
+    filter: brightness(1.35);
+    translate: 0 -2px;
+  }
+}
+
+/* ── Hand: cards size themselves to the space available and fan out ── */
+.hand {
+  container-type: size;
+  position: relative;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 8px;
+}
+.hand .card {
+  --card-h: min(230px, 100cqh - 26px);
+  --card-w: calc(var(--card-h) * 0.71);
+  margin-inline: calc(var(--ov, 4px) / 2);
+  transform-origin: 50% 120%;
+  rotate: calc(var(--t, 0) * 2.2deg);
+  translate: 0 calc(var(--t, 0) * var(--t, 0) * 1.6px);
+  transition:
+    translate 0.12s ease-out,
+    rotate 0.12s ease-out,
+    scale 0.12s ease-out,
+    filter 0.12s;
+}
+.hand .card:hover,
+.hand .card.selected {
+  translate: 0 -30px;
+  rotate: 0deg;
+  scale: 1.1;
+  z-index: 30;
+}
+.hand .card.selected {
+  box-shadow:
+    0 0 0 4px var(--yellow),
+    0 8px 0 rgba(0, 0, 0, 0.45);
+}
+.hand .card.unplayable {
+  filter: saturate(0.25) brightness(0.7);
+}
+.hand .card.unplayable:hover {
+  translate: 0 -10px;
+  scale: 1.04;
+}
+.hand .card.overflow-risk {
+  box-shadow:
+    0 0 0 3px var(--danger),
+    0 4px 0 rgba(0, 0, 0, 0.45);
+}
+.hand .card.deal {
+  animation: deal 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) backwards;
+  animation-delay: calc(var(--d, 0) * 55ms);
+}
+@keyframes deal {
+  from {
+    transform: translate(-46vw, 60px) rotate(-30deg) scale(0.5);
+    opacity: 0;
+  }
+}
+.hand-empty {
+  align-self: center;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+/* A played card flies up toward the top screen. */
+.cast-ghost {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  margin: 0;
+  animation: cast 0.38s ease-in forwards;
+}
+@keyframes cast {
+  30% {
+    transform: translateY(-40px) scale(1.12);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-260px) scale(0.55);
+    opacity: 0;
+  }
+}

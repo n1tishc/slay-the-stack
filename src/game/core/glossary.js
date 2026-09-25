@@ -1,0 +1,66 @@
+// Glossary: every renamed Slay the Spire concept. Used for tooltips and the How to Play screen.
+export const KEYWORDS = {
+  Compute: 'Your energy. Refills to 3 at the start of every turn. Cards cost Compute to play.',
+  Context:
+    'Your context window. Playing a card adds its tokens to Context. Context carries over between turns within a combat and resets after each combat.',
+  'Deep Context': 'While Context is at 70% of max or higher, your attacks deal 50% more damage.',
+  Overflow:
+    'If a card pushes Context past its max, the card still resolves, then you Hallucinate: Context resets to 0, you lose all remaining Compute, and a Hallucination is shuffled into your draw pile.',
+  Hallucinate:
+    'Happens on Overflow: Context resets to 0, you lose all remaining Compute, and a Hallucination is shuffled into your draw pile.',
+  Guard: 'Blocks incoming damage. Removed at the start of your next turn.',
+  Weights: 'Increases attack damage by 1 per stack (per hit).',
+  Robustness: 'Increases Guard gained from cards by 1 per stack.',
+  Exposed: 'Takes 50% more damage from attacks. Decreases by 1 at the end of its owner’s turn.',
+  Throttled: 'Deals 25% less attack damage. Decreases by 1 at the end of its owner’s turn.',
+  Brittle: 'Gains 25% less Guard from cards. Decreases by 1 at the end of its owner’s turn.',
+  Hotpatch: 'At the start of its turn, the target loses HP equal to Hotpatch (ignores Guard), then Hotpatch decreases by 1.',
+  Thought: 'Claude’s reasoning stacks. Some cards spend Thought for big effects.',
+  Pushback: 'When attacked, deal this much damage back to the attacker. Removed at the start of your turn.',
+  Principles: 'Permanent Pushback: when attacked, deal this much damage back to the attacker.',
+  'Tool Call': 'A 0-Compute, 1-token attack: Deal 3 damage. Exhaust.',
+  Fork: 'Llama’s copies. A Fork is a copy of a card that costs 1 less Compute, is Ethereal, and Exhausts when played. “Fork the last card you played” copies the last Attack, Skill or Power you played this turn.',
+  Switch:
+    'DeepSeek’s combos. A card is a Switch when it is an Attack played right after a Skill, or a Skill right after an Attack, in the same turn. Powers don’t break the chain.',
+  Exhaust: 'Deprecated: removed from play until the end of combat.',
+  Ethereal: 'If this card is in your hand at the end of your turn, it is Exhausted.',
+  Unplayable: 'This card cannot be played.',
+  Hallucination: 'Unplayable. Ethereal. Clogs your hand.',
+  Warning: 'Costs 1 Compute to dismiss. Does nothing. Exhaust.',
+  'PagerDuty Alert': 'Costs 1 Compute to acknowledge (Exhaust). If it is in your hand at the end of your turn, you take 3 damage.',
+  'Tech Debt': 'Curse. Unplayable. Stays in your deck until Deprecated.',
+  'Phishing Link': 'Looks like free Compute: gain 1 Compute, but ALL enemies gain 1 Weights. Ethereal.',
+  Encrypted: 'Costs 1 more Compute. Playing it decrypts it. Lasts until the end of combat.',
+  Tokens: 'How much Context a card adds when played.',
+  Practice:
+    'A real-world habit that beats one failure mode. After a fight, the reward screen offers the Practice for each failure you met.',
+  Counter: 'Every failure mode is weak to one Practice. Playing that Practice cancels the enemy’s next move and applies 2 Exposed to it.',
+};
+
+// Slay the Spire → Slay the Stack mapping (shown in How to Play + README).
+export const MAPPING = [
+  ['Characters', 'Frontier models (Claude, GPT, Gemini, Llama, DeepSeek)'],
+  ['Enemies', 'Failure modes: the ways coding agents go wrong'],
+  ['Elites', 'Incidents (SEV-2)'],
+  ['Act boss', 'SEV-0 incident (one of three, shown on the map)'],
+  ['Act 1', 'Chapter 1: The Legacy Monolith'],
+  ['HP', 'Uptime'],
+  ['Energy', 'Compute'],
+  ['Block', 'Guard'],
+  ['Strength / Dexterity', 'Weights / Robustness'],
+  ['Vulnerable / Weak / Frail', 'Exposed / Throttled / Brittle'],
+  ['Poison', 'Hotpatch'],
+  ['Gold', 'API Credits'],
+  ['Relics', 'Plugins'],
+  ['Potions', 'Scripts'],
+  ['Rest site', 'Downtime (Sleep / Fine-tune)'],
+  ['Smith (upgrade)', 'Fine-tune'],
+  ['Merchant', 'Marketplace'],
+  ['? Events', 'Slack threads'],
+  ['Card removal', 'Deprecate'],
+  ['Exhaust', 'Exhaust (deprecated for this combat)'],
+  ['Wounds / Dazed / Burns', 'Warnings / Hallucinations / PagerDuty Alerts'],
+  ['Curses', 'Tech Debt'],
+  ['NEW: Practices', 'Real-world habits that Counter a failure mode; each fight teaches you one'],
+  ['NEW: Context window', 'Each card spends tokens. Fill Context for Deep Context damage, but Overflow and you Hallucinate'],
+];

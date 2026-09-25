@@ -1,0 +1,88 @@
+/* Bottom-screen header strip: model, HP, credits, plugins, scripts, menu pills. */
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  background: rgba(8, 10, 24, 0.7);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+  font-size: 15px;
+  font-weight: 600;
+}
+.strip .who {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+.who-bot {
+  width: 22px;
+  height: 28px;
+}
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.stat .hp {
+  color: var(--danger);
+}
+.stat .cr {
+  color: var(--yellow);
+}
+.strip .spacer {
+  flex: 1;
+}
+.plugins,
+.scripts {
+  display: flex;
+  gap: 3px;
+}
+.plugin-ico,
+.script-slot {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: help;
+}
+.plugin-ico.used {
+  opacity: 0.35;
+}
+.script-slot {
+  border-style: dashed;
+}
+.script-slot.filled {
+  border-style: solid;
+  cursor: pointer;
+  background: rgba(255, 203, 61, 0.12);
+}
+.script-slot.filled:hover {
+  border-color: var(--yellow);
+}
+.script-slot.selected {
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 2px var(--yellow);
+}
+.pill {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--cream);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 0 2px 0 var(--ink);
+}
+.pill:hover {
+  background: #fff;
+}
+.pill:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}

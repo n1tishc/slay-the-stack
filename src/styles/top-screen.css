@@ -1,0 +1,212 @@
+/* Top screen: canvas, overlays, message box, title logo and world-anchored labels. */
+#top-screen {
+  background: #000;
+}
+#stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  display: block;
+}
+#ov-world,
+#ov-hud,
+#ov-float {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+#ov-world > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  will-change: transform;
+}
+#ov-hud > * {
+  pointer-events: auto;
+}
+#top-screen.glitch #stage {
+  animation: glitch 0.7s steps(2) both;
+}
+#top-screen.glitch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255, 0, 80, 0.12) 0 2px, transparent 2px 5px);
+  mix-blend-mode: screen;
+  animation: fadeout 0.7s forwards;
+}
+@keyframes glitch {
+  0% {
+    filter: hue-rotate(0) saturate(1);
+    transform: translate(0);
+  }
+  20% {
+    filter: hue-rotate(90deg) saturate(3) drop-shadow(4px 0 0 #f0f) drop-shadow(-4px 0 0 #0ff);
+    transform: translate(-6px, 2px);
+  }
+  40% {
+    filter: invert(0.8) hue-rotate(200deg);
+    transform: translate(5px, -3px) skewX(6deg);
+  }
+  60% {
+    filter: hue-rotate(-60deg) saturate(2) drop-shadow(-3px 0 0 #f00);
+    transform: translate(-3px, 0);
+  }
+  100% {
+    filter: none;
+    transform: none;
+  }
+}
+@keyframes fadeout {
+  to {
+    opacity: 0;
+  }
+}
+
+.hud-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(8, 8, 16, 0.72);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+.deep-tag {
+  color: var(--deep);
+}
+
+/* message box */
+#msgbox {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  min-height: 56px;
+  padding: 9px 40px 9px 16px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 3px var(--cream),
+    inset 0 0 0 5px var(--accent),
+    0 3px 0 rgba(0, 0, 0, 0.4);
+  font-size: calc(18px * var(--ts));
+  line-height: 1.3;
+  font-weight: 500;
+  cursor: pointer;
+}
+#msgbox[hidden] {
+  display: none;
+}
+#msgbox .msg-more {
+  position: absolute;
+  right: 14px;
+  bottom: 8px;
+  color: var(--red);
+  opacity: 0;
+  font-size: 14px;
+}
+#msgbox.done .msg-more {
+  opacity: 1;
+  animation: bob 0.8s steps(2) infinite;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* title */
+.logo-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7%;
+  text-align: center;
+  pointer-events: none !important;
+}
+.logo {
+  font-size: clamp(40px, 7vw, 78px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  color: var(--cream);
+  text-shadow:
+    3px 0 0 var(--ink),
+    -3px 0 0 var(--ink),
+    0 3px 0 var(--ink),
+    0 -3px 0 var(--ink),
+    3px 3px 0 var(--ink),
+    -3px -3px 0 var(--ink),
+    3px -3px 0 var(--ink),
+    -3px 3px 0 var(--ink),
+    0 8px 0 #7a1024;
+}
+.logo span {
+  color: #ff5a4f;
+  font-size: 1.28em;
+}
+.logo-sub {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #ffd6d6;
+  text-shadow: 2px 2px 0 #000;
+  letter-spacing: 0.1em;
+}
+
+/* world-anchored labels */
+.w-label {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  background: rgba(8, 8, 16, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  margin-top: -4px;
+}
+.w-label.on {
+  background: var(--c);
+  color: #fff;
+  border-color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+.node-label {
+  background: var(--yellow);
+  color: var(--ink);
+  border-color: var(--ink);
+  animation: lbob 1s steps(2) infinite;
+  pointer-events: none !important;
+}
+@keyframes lbob {
+  50% {
+    translate: 0 -3px;
+  }
+}
+.node-label.boss {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* Battle-intro wipe (see stage/transition.js). */
+#wipe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+#wipe[hidden] {
+  display: none;
+}

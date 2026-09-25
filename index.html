@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A Slay the Spire-inspired roguelike deckbuilder where frontier AI models fight production bugs." />
+    <meta name="color-scheme" content="dark" />
+    <title>Slay the Stack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="ds">
+      <!-- Top screen: persistent three.js canvas + overlays (never re-rendered) -->
+      <div id="top-screen" class="screen-frame">
+        <canvas id="stage"></canvas>
+        <div id="ov-world"></div>
+        <div id="ov-hud"></div>
+        <div id="ov-float"></div>
+        <div id="msgbox" hidden>
+          <div class="msg-text"></div>
+          <span class="msg-more">▼</span>
+        </div>
+      </div>
+      <div id="hinge"><i></i><i></i></div>
+      <!-- Bottom screen: menus, hand and meters -->
+      <div id="bottom-screen" class="screen-frame"><div id="app"></div></div>
+    </div>
+    <div id="modal"></div>
+    <div id="tooltip" role="tooltip"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

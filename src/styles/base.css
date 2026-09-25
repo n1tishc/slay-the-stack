@@ -1,0 +1,39 @@
+/* Element defaults and tiny utilities. */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  background: radial-gradient(ellipse at 50% 0%, #2a2238, var(--page) 60%);
+  color: var(--text);
+  font-family: var(--px);
+  font-size: 15px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+b.up {
+  color: #1f9e4a;
+}
+b.down {
+  color: #d02d3d;
+}
+.dim {
+  color: var(--dim);
+}
+.small {
+  font-size: 12px;
+}
+.px-ico {
+  image-rendering: pixelated;
+  vertical-align: middle;
+}

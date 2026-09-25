@@ -1,0 +1,251 @@
+/* Modal dialogs and the card picker. */
+#modal:empty {
+  display: none;
+}
+#modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(6, 5, 12, 0.8);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
+}
+.modal-box {
+  position: relative;
+  width: min(1060px, 100%);
+  margin: 30px 14px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: repeating-linear-gradient(45deg, var(--navy) 0 14px, var(--navy2) 14px 28px);
+  border: 4px solid var(--ink);
+  box-shadow:
+    0 0 0 3px #50567a,
+    0 20px 50px #000;
+}
+.modal-box h2 {
+  margin: 0 0 2px;
+  font-size: 24px;
+  text-shadow: 2px 2px 0 #000;
+}
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.close-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 16px;
+  justify-content: center;
+  padding: 16px 4px;
+}
+.card-grid .card:hover {
+  transform: translateY(-4px);
+}
+.pick-wrap .face-up {
+  display: none;
+}
+.pick-wrap.flip:hover .face-base {
+  display: none;
+}
+.pick-wrap.flip:hover .face-up {
+  display: flex;
+}
+.howto p,
+.howto li {
+  line-height: 1.45;
+  font-size: calc(15px * var(--ts));
+  color: #e3e6f7;
+}
+.howto h3 {
+  margin: 18px 0 6px;
+  color: var(--yellow);
+  text-shadow: 2px 2px 0 #000;
+}
+.ctx-c {
+  color: #a9c2ff;
+}
+.deep-c {
+  color: var(--deep);
+}
+.bad-c {
+  color: var(--danger);
+}
+.map-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: calc(14px * var(--ts));
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+}
+.map-table td,
+.map-table th {
+  padding: 5px 9px;
+  border-bottom: 2px solid var(--cream2);
+  text-align: left;
+}
+.map-table td:first-child {
+  color: #6a6078;
+}
+.map-table tr.twist td {
+  color: #b3500a;
+  font-weight: 700;
+}
+.map-table .win {
+  color: #1f8a3f;
+  font-weight: 700;
+}
+.map-table .lose {
+  color: #c42b3a;
+  font-weight: 700;
+}
+.hist {
+  margin-top: 10px;
+}
+.gloss {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 6px;
+}
+.gloss div {
+  background: var(--cream);
+  color: #4d4460;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: calc(13.5px * var(--ts));
+}
+.gloss b {
+  display: block;
+  color: var(--ink);
+}
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+.set-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  font-size: 17px;
+}
+.seg-btn {
+  padding: 5px 14px;
+  margin-left: 4px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: var(--cream2);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+.seg-btn.on {
+  background: var(--yellow);
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Field Guide */
+.fg-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.fg-entry {
+  padding: 10px 12px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+}
+.fg-entry.focus {
+  box-shadow: 0 0 0 3px var(--practice);
+}
+.fg-entry.locked {
+  background: var(--cream2);
+  opacity: 0.7;
+}
+.fg-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fg-head b {
+  display: block;
+  font-size: 17px;
+}
+.fg-head small {
+  color: #6a6078;
+}
+.fg-ico {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+.fg-entry dl {
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: 9.5em 1fr;
+  gap: 4px 10px;
+  font-size: calc(14px * var(--ts));
+  line-height: 1.4;
+}
+.fg-entry dt {
+  font-weight: 700;
+  color: #6a6078;
+}
+.fg-entry dd {
+  margin: 0;
+}
+.fg-fact {
+  margin-top: 8px;
+  padding: 6px 8px;
+  font-size: calc(13.5px * var(--ts));
+  line-height: 1.4;
+  background: #e4f6f2;
+  border: 2px dashed var(--practice);
+  border-radius: 6px;
+}
+.fg-src {
+  margin-top: 4px;
+  font-size: calc(12px * var(--ts));
+  color: #6a6078;
+}
+.fg-src a {
+  color: #3a5bb8;
+}
+.fg-counter {
+  margin-top: 8px;
+  font-size: calc(13px * var(--ts));
+  color: #1d7a6c;
+}
+.fg-counter img {
+  width: 16px;
+  vertical-align: -3px;
+}
+@media (max-width: 600px) {
+  .fg-entry dl {
+    grid-template-columns: 1fr;
+  }
+  .fg-entry dd {
+    margin-bottom: 4px;
+  }
+}
