@@ -205,13 +205,20 @@ export function battle(opts) {
     );
   };
 
-  // Leaves the fight: hops, then dashes off-screen to the right.
-  sc.escape = (uid) => {
+  // Marks an enemy as leaving (it can no longer be clicked); null if it is already gone or going.
+  function retire(uid) {
     const e = ents[uid];
-    if (!e || e.dying) return;
+    if (!e || e.dying) return null;
     e.dying = true;
     const idx = sc.pickables.indexOf(e.sp.mesh);
     if (idx >= 0) sc.pickables.splice(idx, 1);
+    return e;
+  }
+
+  // Leaves the fight: hops, then dashes off-screen to the right.
+  sc.escape = (uid) => {
+    const e = retire(uid);
+    if (!e) return;
     tween(
       0.7,
       (k) => {
@@ -233,11 +240,8 @@ export function battle(opts) {
   // Handheld-style faint: blink, then sink into the platform a texel at a time
   // (clipped at the platform top), a puff of dust, and the platform folds away.
   sc.faint = (uid) => {
-    const e = ents[uid];
-    if (!e || e.dying) return;
-    e.dying = true;
-    const idx = sc.pickables.indexOf(e.sp.mesh);
-    if (idx >= 0) sc.pickables.splice(idx, 1);
+    const e = retire(uid);
+    if (!e) return;
     const m = e.sp.mesh;
     e.clip.constant = -0.1;
     const plat = e.g.children[0];

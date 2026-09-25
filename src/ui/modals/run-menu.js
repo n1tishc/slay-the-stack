@@ -1,5 +1,5 @@
 // In-run menu actions: view deck, save & quit, abandon.
-import { Run } from '../../game/engine/run.js';
+import { clearRun } from '../../settings.js';
 import { defineActions } from '../actions.js';
 import { toTitle } from '../flow.js';
 import { openModal, sortedDeck, viewCards } from '../modal.js';
@@ -16,7 +16,7 @@ defineActions({
     ),
   'save-quit': toTitle,
   'abandon-yes': () => {
-    Run.clearSave();
+    clearRun();
     toTitle();
   },
 });

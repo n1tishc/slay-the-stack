@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CARDS, Combat, ENCOUNTERS, ENEMIES, FAILURES, FIRST_ENCOUNTER, Run, countersOf, newCard } from '../../src/game/index.js';
+import { CARDS, Combat, ENCOUNTERS, ENEMIES, EVENTS, FAILURES, FIRST_ENCOUNTER, Run, countersOf, newCard } from '../../src/game/index.js';
 
 function setup(enemies, deck) {
   const run = Run.create('claude', 42);
@@ -116,8 +116,7 @@ describe('Lessons', () => {
 });
 
 describe('Scenarios', () => {
-  it('each have one best, one risky and one bad call, and teach a real failure mode', async () => {
-    const { EVENTS } = await import('../../src/game/index.js');
+  it('each have one best, one risky and one bad call, and teach a real failure mode', () => {
     expect(EVENTS.length).toBeGreaterThanOrEqual(10);
     EVENTS.forEach((ev) => {
       expect(ev.options.map((o) => o.grade).sort(), ev.id).toEqual(['bad', 'best', 'ok']);
@@ -126,8 +125,7 @@ describe('Scenarios', () => {
     });
   });
 
-  it('reward a best call with Credits and the Practice, and build a streak', async () => {
-    const { EVENTS } = await import('../../src/game/index.js');
+  it('reward a best call with Credits and the Practice, and build a streak', () => {
     const run = Run.create('claude', 3);
     const ev = EVENTS.find((e) => e.failure === 'ghost_package');
     const best = ev.options.findIndex((o) => o.grade === 'best');
@@ -141,8 +139,7 @@ describe('Scenarios', () => {
     expect(run.stats).toMatchObject({ calls: 2, bestCalls: 2, streak: 2 });
   });
 
-  it('punish a bad call without killing you, and reset the streak', async () => {
-    const { EVENTS } = await import('../../src/game/index.js');
+  it('punish a bad call without killing you, and reset the streak', () => {
     const run = Run.create('gpt', 3);
     run.hp = 3;
     run.stats.streak = 4;
@@ -157,8 +154,7 @@ describe('Scenarios', () => {
     expect(run.calls).toEqual([{ id: ev.id, grade: 'bad' }]);
   });
 
-  it('bring back a call missed in an earlier run, every other scenario, then prefer new ones', async () => {
-    const { EVENTS } = await import('../../src/game/index.js');
+  it('bring back a call missed in an earlier run, every other scenario, then prefer new ones', () => {
     const [missed, done] = EVENTS;
     const past = Object.fromEntries(EVENTS.map((e) => [e.id, 'best']));
     past[missed.id] = 'bad';

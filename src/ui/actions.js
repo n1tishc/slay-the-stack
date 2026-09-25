@@ -9,10 +9,6 @@ export function defineActions(map) {
   }
 }
 
-export function runAction(name, data = {}) {
-  handlers.get(name)?.(data);
-}
-
 // Click handler: finds the nearest [data-act] and runs it with the element's dataset.
 export function dispatch(e) {
   const el = e.target.closest('[data-act]');

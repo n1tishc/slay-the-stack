@@ -296,7 +296,7 @@ src/art    runtime pixel art: robots, emoji icons, textures, drawn on canvases
 ```
 index.html                 page shell (two screens + overlays)
 src/main.js                entry point: styles, app start, `SS` debug handle
-src/settings.js            persisted settings, run history, Field Guide and scenario progress
+src/settings.js            everything saved: settings, the run in progress, run history, Field Guide and scenario progress
 
 src/game/                  pure game logic (see Architecture)
   core/                    seeded RNG, ids, keyword glossary
@@ -308,7 +308,7 @@ src/game/                  pure game logic (see Architecture)
   data/modes.js            difficulty modes
   data/events.js           the Slack scenarios
   data/plugins.js          plugins (relics); scripts.js: scripts (potions)
-  engine/                  combat rules, map generation, run state, rewards and saves
+  engine/                  combat rules, map generation, run state and rewards
 
 src/art/                   pixel-art pipeline: canvas → hard pixels + outline; robots, textures, emoji icons
 src/stage/                 top screen (three.js)

@@ -10,10 +10,29 @@ function trackErrors(page) {
   return errors;
 }
 
-async function newRun(page, char = 'claude') {
+// Opens the title screen with empty storage, plus any saved keys given (values are JSON-encoded).
+async function freshStart(page, saved = {}) {
   await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate((saved) => {
+    localStorage.clear();
+    for (const [k, v] of Object.entries(saved)) localStorage.setItem(k, JSON.stringify(v));
+  }, saved);
   await page.reload();
+}
+
+// Holds back the 3D side until release() is called.
+async function holdStage(page) {
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(/\/src\/stage\/impl\.js/, async (r) => {
+    await held;
+    await r.continue();
+  });
+  return release;
+}
+
+async function newRun(page, char = 'claude') {
+  await freshStart(page);
   await page.click('[data-act="new-run"]');
   await page.click(`[data-act="focus-char"][data-id="${char}"]`);
   await page.click(`[data-act="pick-char"][data-id="${char}"]`);
@@ -322,12 +341,7 @@ test('Llama Forks the last card played; DeepSeek marks the cards that would Swit
 
 test('Practice deals missed scenarios first, grades them with no run, and records the answer', async ({ page }) => {
   const errors = trackErrors(page);
-  await page.goto('/');
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('slay-the-stack-calls-v1', JSON.stringify({ fake_method: 'bad' }));
-  });
-  await page.reload();
+  await freshStart(page, { 'slay-the-stack-calls-v1': { fake_method: 'bad' } });
   await expect(page.locator('.tile.teal')).toContainText('1 to revisit');
   await page.click('[data-act="practice"]');
   await expect(page.locator('.room-title')).toContainText('PRACTICE 1/12');
@@ -344,9 +358,7 @@ test('Practice deals missed scenarios first, grades them with no run, and record
 });
 
 test('new players start on Learning; Hard unlocks after a Standard win', async ({ page }) => {
-  await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
+  await freshStart(page);
   await page.click('[data-act="new-run"]');
   await expect(page.locator('.cs-mode .seg-btn.on')).toContainText('Learning');
   await expect(page.locator('[data-act="pick-mode"][data-id="hard"]')).toBeDisabled();
@@ -362,31 +374,20 @@ test('new players start on Learning; Hard unlocks after a Standard win', async (
 });
 
 test('players with runs behind them keep Standard when difficulty arrives', async ({ page }) => {
-  await page.goto('/');
-  await page.evaluate(() => {
-    localStorage.clear();
-    localStorage.setItem('slay-the-stack-settings-v1', JSON.stringify({ speed: 1 }));
-    localStorage.setItem(
-      'slay-the-stack-history-v1',
-      JSON.stringify([{ date: '2026-09-01', char: 'gpt', win: false, floor: 4, killer: 'Scope Creep', seed: 1, deck: 12, bugs: 3 }]),
-    );
+  await freshStart(page, {
+    'slay-the-stack-settings-v1': { speed: 1 },
+    'slay-the-stack-history-v1': [
+      { date: '2026-09-01', char: 'gpt', win: false, floor: 4, killer: 'Scope Creep', seed: 1, deck: 12, bugs: 3 },
+    ],
   });
-  await page.reload();
   await page.click('[data-act="new-run"]');
   await expect(page.locator('.cs-mode .seg-btn.on')).toContainText('Standard');
 });
 
 test('the menus work before the 3D side loads, and a fight started early waits for it', async ({ page }) => {
   const errors = trackErrors(page);
-  let release;
-  const held = new Promise((resolve) => (release = resolve));
-  await page.route(/\/src\/stage\/impl\.js/, async (r) => {
-    await held;
-    await r.continue();
-  });
-  await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
+  const release = await holdStage(page);
+  await freshStart(page);
   await page.click('[data-act="new-run"]');
   await page.click('[data-act="pick-char"][data-id="claude"]');
   await expect(page.locator('.route .n.avail').first()).toBeVisible();
@@ -410,15 +411,8 @@ test('the menus work before the 3D side loads, and a fight started early waits f
 
 test('when the 3D side lands it shows the latest screen, with handlers set before the load', async ({ page }) => {
   const errors = trackErrors(page);
-  let release;
-  const held = new Promise((resolve) => (release = resolve));
-  await page.route(/\/src\/stage\/impl\.js/, async (r) => {
-    await held;
-    await r.continue();
-  });
-  await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
+  const release = await holdStage(page);
+  await freshStart(page);
   await page.click('[data-act="new-run"]');
   await page.click('[data-act="pick-char"][data-id="claude"]');
   await expect(page.locator('.route .n.avail').first()).toBeVisible();

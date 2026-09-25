@@ -10,12 +10,13 @@ export default [
   },
   {
     files: ['src/**/*.js'],
+    ignores: ['src/game/**'],
     languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: globals.browser },
   },
   {
     // Game logic must stay DOM-free so it runs in Node (tests, balance sim).
     files: ['src/game/**/*.js'],
-    languageOptions: { globals: {} },
+    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: {} },
   },
   {
     files: ['scripts/**/*.js', 'tests/**/*.js', '*.config.js'],

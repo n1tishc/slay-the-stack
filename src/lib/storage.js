@@ -1,26 +1,30 @@
 // localStorage wrappers. Storage can be missing or throw (private windows, blocked cookies),
 // so every access is optional and falls back to a default.
-export function loadJSON(key, fallback) {
+function attempt(fn, fallback) {
   try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : fallback;
+    return fn();
   } catch {
     return fallback;
   }
 }
 
-export function saveJSON(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* storage unavailable */
-  }
+export function loadText(key) {
+  return attempt(() => localStorage.getItem(key), null);
+}
+
+export function saveText(key, text) {
+  attempt(() => localStorage.setItem(key, text));
 }
 
 export function removeKey(key) {
-  try {
-    localStorage.removeItem(key);
-  } catch {
-    /* storage unavailable */
-  }
+  attempt(() => localStorage.removeItem(key));
+}
+
+export function loadJSON(key, fallback) {
+  const v = loadText(key);
+  return v ? attempt(() => JSON.parse(v), fallback) : fallback;
+}
+
+export function saveJSON(key, value) {
+  saveText(key, JSON.stringify(value));
 }

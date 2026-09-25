@@ -142,6 +142,13 @@ C.enemyByUid = function (uid) {
   for (var i = 0; i < this.enemies.length; i++) if (this.enemies[i].uid === uid) return this.enemies[i];
   return null;
 };
+// The chosen enemy if it is still alive, else the only one left; null when the choice is ambiguous.
+C.pickTarget = function (targetUid) {
+  var t = targetUid != null ? this.enemyByUid(targetUid) : null;
+  if (this.alive(t)) return t;
+  var alive = this.enemiesAlive();
+  return alive.length === 1 ? alive[0] : null;
+};
 
 C.deepThreshold = function () {
   var frac = this.pluginFlag('deepThreshold') || 0.7;
@@ -590,12 +597,8 @@ C.play = function (idx, targetUid) {
   var view = cardView(inst);
   var t = null;
   if (view.target === 'enemy') {
-    t = targetUid != null ? this.enemyByUid(targetUid) : null;
-    if (!this.alive(t)) {
-      var alive = this.enemiesAlive();
-      if (alive.length === 1) t = alive[0];
-      else return false;
-    }
+    t = this.pickTarget(targetUid);
+    if (!t) return false;
   }
   this.p.energy -= view.cost;
   this.hand.splice(idx, 1);
@@ -641,12 +644,8 @@ C.useScript = function (slot, targetUid) {
   var s = SCRIPTS[id];
   var t = null;
   if (s.target === 'enemy') {
-    t = targetUid != null ? this.enemyByUid(targetUid) : null;
-    if (!this.alive(t)) {
-      var alive = this.enemiesAlive();
-      if (alive.length === 1) t = alive[0];
-      else return false;
-    }
+    t = this.pickTarget(targetUid);
+    if (!t) return false;
   }
   this.run.scripts.splice(slot, 1);
   s.use(this, t);

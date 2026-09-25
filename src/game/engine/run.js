@@ -12,8 +12,6 @@ import { SCRIPTS } from '../data/scripts.js';
 import { ChapterMap } from './map.js';
 
 export const Run = {
-  SAVE_KEY: 'slay-the-stack-save-v1',
-
   create: function (charId, seed, mode) {
     var ch = CHARACTERS[charId];
     seed = seed === undefined ? (Date.now() ^ (Math.random() * 1e9)) >>> 0 : seed;
@@ -352,28 +350,5 @@ export const Run = {
       }
     }
     return out;
-  },
-
-  save: function (run) {
-    try {
-      localStorage.setItem(Run.SAVE_KEY, Run.serialize(run));
-    } catch (e) {
-      /* storage unavailable */
-    }
-  },
-  load: function () {
-    try {
-      var s = localStorage.getItem(Run.SAVE_KEY);
-      return s ? Run.deserialize(s) : null;
-    } catch (e) {
-      return null;
-    }
-  },
-  clearSave: function () {
-    try {
-      localStorage.removeItem(Run.SAVE_KEY);
-    } catch (e) {
-      /* ignore */
-    }
   },
 };

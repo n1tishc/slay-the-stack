@@ -4,7 +4,7 @@ import { CHARACTERS } from '../game/data/characters.js';
 import { ENEMIES } from '../game/data/enemies/index.js';
 import { ChapterMap } from '../game/engine/map.js';
 import { Run } from '../game/engine/run.js';
-import { addHistory, hardUnlocked, loadCalls, saveSettings, settings } from '../settings.js';
+import { addHistory, clearRun, hardUnlocked, loadCalls, loadRun, saveRun, saveSettings, settings } from '../settings.js';
 import { charSelect, clearTransition, mapScene, room, showScene, title } from '../stage/index.js';
 import { startCombat } from './combat/controller.js';
 import { hideMessage, say } from './msgbox.js';
@@ -60,7 +60,7 @@ export function startRun(charId) {
 }
 
 export function continueRun() {
-  const run = Run.load();
+  const run = loadRun();
   if (!run) return;
   ui.run = run;
   setAccent();
@@ -72,7 +72,7 @@ export function toMap() {
   ui.screen = 'map';
   ui.c = null;
   ui.busy = false;
-  Run.save(ui.run);
+  saveRun(ui.run);
   const run = ui.run;
   ui.sc = showScene(mapScene, { run, avail: ChapterMap.available(run.map, run.pos) });
   ui.sc.click = (h) => goNode(h.row, h.col, !!h.boss);
@@ -180,7 +180,7 @@ export function gameOver(win, c) {
     settings.hardUnlocked = true;
     saveSettings();
   }
-  Run.clearSave();
+  clearRun();
   ui.c = null;
   ui.screen = 'over';
   showRoom(win ? 'win' : 'lose', win ? '🏆' : '💀', win ? ['🎉', '✨', '🎉'] : ['🔥', '📟']);

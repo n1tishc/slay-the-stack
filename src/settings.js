@@ -1,7 +1,10 @@
-// Player settings (persisted) and run history. Shared by the DOM UI and the 3D stage.
-import { loadJSON, saveJSON } from './lib/storage.js';
+// Everything the game keeps in storage: player settings, the run in progress, run history and
+// learning progress. Shared by the DOM UI and the 3D stage.
+import { Run } from './game/engine/run.js';
+import { loadJSON, loadText, removeKey, saveJSON, saveText } from './lib/storage.js';
 
 const SETTINGS_KEY = 'slay-the-stack-settings-v1';
+const RUN_KEY = 'slay-the-stack-save-v1';
 const HISTORY_KEY = 'slay-the-stack-history-v1';
 const HISTORY_LIMIT = 30;
 const GUIDE_KEY = 'slay-the-stack-guide-v1';
@@ -39,6 +42,24 @@ export function scaled(ms) {
 
 export function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, scaled(ms)));
+}
+
+// The run in progress, saved at the map. A save that cannot be read counts as no save.
+export function saveRun(run) {
+  saveText(RUN_KEY, Run.serialize(run));
+}
+
+export function loadRun() {
+  const s = loadText(RUN_KEY);
+  try {
+    return s ? Run.deserialize(s) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearRun() {
+  removeKey(RUN_KEY);
 }
 
 export function loadHistory() {

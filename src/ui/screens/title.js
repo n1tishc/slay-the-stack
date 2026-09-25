@@ -3,10 +3,9 @@ import { iconImg } from '../../art/icons.js';
 import { robotURL } from '../../art/robots.js';
 import { CHARACTERS } from '../../game/data/characters.js';
 import { ENEMIES, FAILURES } from '../../game/data/enemies/index.js';
-import { Run } from '../../game/engine/run.js';
 import { esc } from '../../lib/html.js';
 import { EVENTS } from '../../game/data/events.js';
-import { loadCalls, loadGuide, loadHistory } from '../../settings.js';
+import { loadCalls, loadGuide, loadHistory, loadRun } from '../../settings.js';
 import { defineActions } from '../actions.js';
 import { continueRun, toCharSelect, toTitle } from '../flow.js';
 import { toPractice } from './practice.js';
@@ -23,7 +22,7 @@ function tile(act, color, icon, label, sub, extra = '') {
 }
 
 export function bottom() {
-  const save = Run.load();
+  const save = loadRun();
   const hist = loadHistory();
   const wins = hist.filter((h) => h.win).length;
   const found = loadGuide().length;
